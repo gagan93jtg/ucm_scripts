@@ -1,18 +1,26 @@
 require 'json'
 require 'typhoeus'
+require 'date'
 
-abort("Usage: #{__FILE__} raw_data_file_path")if ARGV[0].nil?
+if(ARGV[0].nil? || ARGV[1].to_i == 0 || ARGV[2].to_s.empty?)
+  puts("Usage: ruby #{__FILE__} raw_data_file_path days_old jira_username_colon_password. Example :")
+  abort("\nruby #{__FILE__} /home/ubuntu/timesheet_data 2 email@domain.com:password")
+end
 
 raw_data = File.read(ARGV[0])
-
-parameters = { 'timeSpentSeconds' => '',
- 'started' => '2017-02-01T12:00:00.00+0000',
- 'comment'=> ''
+days = ARGV[1].to_i
+auth = ARGV[2]
+date = Date.parse(Time.at(((Time.now.to_i / 86400) * 86400) - (86400 * days)).to_s).to_s
+parameters = { 'timeSpentSeconds' => nil,
+ 'started' => "#{date}T12:00:00.00+0000", # UTC 12:00:00 PM of that particular day
+ 'comment'=> nil
 }
 
-headers = {'content-type' => 'application/json'}
-auth = 'gagandeep.singh@kickdrumtech.com:gagan1dinesh'
+puts "Logging hours for #{date} ..."
 
+sleep 2
+
+headers = {'content-type' => 'application/json'}
 
 raw_data.split("\n").each do |line|
   line = line.split(' ')
