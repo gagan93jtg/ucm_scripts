@@ -12,11 +12,22 @@ def success?(typhoeus_response)
   end
 end
 
+if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty?)
+  puts("Usage: ruby #{__FILE__} jira_username jira_password google_config_json_file_path. Example:")
+  abort("\nruby #{__FILE__} email@domain.com password ~/config.json")
+end
+
+
+username = ARGV[0]
+password = ARGV[1]
+google_json_path = ARGV[2]
+
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
+SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
 
 jira_options = {
-  username: 'gagandeep.singh@kickdrumtech.com',
-  password: 'gagan1dinesh',
+  username: username,
+  password: password,
   site: 'https://copperegg.atlassian.net'
 }
 
@@ -29,11 +40,10 @@ members_username_mapping = { 'Gagan' => 'gagandeep.singh',
 
 retro = RetroSetup.new
 
-google_client = retro.authenticate_google_drive('../config.json')
+google_client = retro.authenticate_google_drive(google_json_path)
 jira_client = retro.authenticate_simple_jira(jira_options)
 
-sprint_sheet_key = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
-ws = google_client.spreadsheet_by_key(sprint_sheet_key).worksheets[2]
+ws = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets[2]
 
 (1..50).each do |row_index|
   next unless ws[row_index, 1].include?('CE-')
