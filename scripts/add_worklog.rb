@@ -37,7 +37,7 @@ raw_data.split("\n").each do |line|
   hours = line.last.to_f
   description = line[1..-2].join(" ")
 
-  next("Ignoring for #{ticket_id}, doesn't start with CE-") unless ticket_id.include?('CE-')
+  next("Ignoring for #{ticket_id}, starts with TG-") if ticket_id.start_with?('TG-')
   next("Ignoring for #{ticket_id}, time not integer") if(hours.nil? || hours == 0.0)
 
   puts "Logging #{hours} hours for #{ticket_id} with comment #{description}"
@@ -48,9 +48,10 @@ raw_data.split("\n").each do |line|
   typhoeus_response = jira_client.add_worklog(parameters, ticket_id)
   unless typhoeus_response.code.to_s.start_with?('2')
     puts "Response code #{typhoeus_response.code}"
-    puts "Response body #{typhoeus_response.body}"
+    puts "Response body #{typhoeus_response.inspect}"
+    break
   else
-    puts "Success !    [#{ticket_id}]  [#{description}]  [#{hours}]"
+    puts "    Success !    [#{ticket_id}]  [#{description}]  [#{hours}]"
   end
 end
 
