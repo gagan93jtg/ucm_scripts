@@ -2,21 +2,20 @@ require 'retrospectives'
 require 'json'
 include Retrospectives
 
-HEADERS = ['Key', 'Summary', 'Status', 'Estimation owner', 'Poker/Assigned SPs', 'Ticket owner',
- 'Reviewer', 'Comment']
+HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Ticket owner', 'Reviewer', 'Poker/Assigned SPs', 'Estimation owner']
 
- STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
- SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
+STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
+SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
 
- def get_member_name(username)
+def get_member_name(username)
   members_username_mapping = { 'gagandeep.singh' => 'Gagan',
     'Neelakshi' => 'Neelakshi',
     'SwetaSharma' => 'Sweta',
     'DineshYadav' => 'Dinesh',
     'ankit' => 'Ankit',
     'ogkosal' => 'Kosal',
-    'shankar' => 'Shankar'
-  }
+    'shankar' => 'Shankar' }
+  #
   members_username_mapping[username] ||
   username.gsub('.', ' ').gsub('_', ' ').gsub('-', ' ').split.map(&:capitalize)*' '
 end
@@ -41,7 +40,6 @@ def get_sprint_sheet_tickets(subsheet)
     HEADERS.each_with_index do |header, column|
       if header == 'Key'
         key = subsheet[row, column + 1]
-        #puts "jey h #{key}"
       else
         header_key = {}
         header_key[header] = subsheet[row, column + 1]
@@ -58,6 +56,29 @@ def get_sprint_sheet_tickets(subsheet)
   end
 
   old_data
+end
+
+
+def merge_jira_data_with_existing_data(jira_data_array, sprint_sheet_data_array)
+  return if sprint_sheet_data_array.nil? || sprint_sheet_data_array.empty?
+
+  sprint_sheet_tickets_only = []
+  sprint_sheet_data_array.each { |element| sprint_sheet_tickets_only.push(*element.keys) }
+
+  jira_data_array.each_with_index do |jira_row, row|
+    issue_key = jira_row.first
+    if sprint_sheet_tickets_only.include?(issue_key)
+      issue = sprint_sheet_data_array.select {|ticket| ticket.values if ticket.keys == [issue_key]}
+      issue_attrs = issue.first[issue_key]
+      jira_data_array[row][1] = issue_attrs['Summary']
+      jira_data_array[row][2] = issue_attrs['Type']
+      jira_data_array[row][3] = issue_attrs['Status']
+      jira_data_array[row][4] = issue_attrs['Ticket owner']
+      jira_data_array[row][5] = issue_attrs['Reviewer']
+      jira_data_array[row][6] = issue_attrs['Poker/Assigned SPs']
+      jira_data_array[row][7] = issue_attrs['Estimation owner']
+    end
+  end
 end
 
 
@@ -79,18 +100,19 @@ sprint_sheet_tickets = Array.new
 retro = RetroSetup.new
 
 jira_options = { username: jira_username,
- password: jira_password,
- site: 'https://copperegg.atlassian.net',
- context_path: '',
- auth_type: :basic }
+  password: jira_password,
+  site: 'https://copperegg.atlassian.net',
+  context_path: '',
+  auth_type: :basic }
 
- google_client = retro.authenticate_google_drive(google_json_path)
- jira_client = retro.authenticate_jira(jira_options)
+#
+google_client = retro.authenticate_google_drive(google_json_path)
+jira_client = retro.authenticate_jira(jira_options)
 
- issues = jira_client.Issue.jql("Sprint in (#{sprint_id}) ORDER BY Rank")
- all_subsheets = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets
+issues = jira_client.Issue.jql("Sprint in (#{sprint_id}) ORDER BY Rank")
+all_subsheets = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets
 
- all_subsheets.each_with_index do |subsheet, index|
+all_subsheets.each_with_index do |subsheet, index|
   subsheet_index = index if(subsheet.title == sprint_name)
 end
 
@@ -101,26 +123,28 @@ else
 end
 subsheet = all_subsheets[subsheet_index]
 
-sprint_sheet_tickets = get_sprint_sheet_tickets(subsheet)
+sprint_sheet_existing_tickets = get_sprint_sheet_tickets(subsheet)
 
-p sprint_sheet_tickets.inspect
-abort("done")
+#p sprint_sheet_existing_tickets.inspect
 
-all_rows.push(HEADERS)
+#abort("done")
+
+subsheet.update_cells(1, 1, [HEADERS])
 
 issues.each do |issue|
   key = issue.attrs['key']
   summary = issue.attrs['fields']['summary']
+  type = issue.attrs['fields']['issuetype']['name']
   status = 'Open'
-  estimation_owner = ''
-  sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
   ticket_owner = get_member_name(issue.attrs['fields']['assignee']['name'])
   reviewer = ''
-  comments = ''
+  sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
 
-  row = [key, summary, status, estimation_owner, sps, ticket_owner, reviewer, comments]
+  row = [key, summary, type, status, ticket_owner, reviewer, sps]
   all_rows.push(row)
 end
 
-subsheet.update_cells(1, 1, all_rows)
+merge_jira_data_with_existing_data(all_rows, sprint_sheet_existing_tickets)
+
+subsheet.update_cells(2, 1, all_rows)
 subsheet.save
