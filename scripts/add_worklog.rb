@@ -48,8 +48,7 @@ raw_data.split("\n").each do |line|
   typhoeus_response = jira_client.add_worklog(parameters, ticket_id)
   unless typhoeus_response.code.to_s.start_with?('2')
     puts "Response code #{typhoeus_response.code}"
-    puts "Response body #{typhoeus_response.inspect}"
-    break
+    puts "Response body #{typhoeus_response.options[:response_body]}"
   else
     puts "    Success !    [#{ticket_id}]  [#{description}]  [#{hours}]"
   end
