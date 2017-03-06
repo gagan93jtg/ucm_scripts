@@ -3,7 +3,7 @@ require 'json'
 require 'date'
 include Retrospectives
 
-if(ARGV[0].to_s.empty? || ARGV[1].to_i == 0 || ARGV[2].to_s.empty? || ARGV[3].to_s.empty?)
+if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty? || ARGV[3].to_s.empty?)
   puts("Usage: ruby #{__FILE__} raw_data_file_path days_old jira_username jira_password. Example :")
   abort("\nruby #{__FILE__} /home/ubuntu/timesheet_data 2 email@domain.com password")
 end
