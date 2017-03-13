@@ -89,7 +89,6 @@ PLATFORMS
 
 DEPENDENCIES
   retrospectives (= 0.1.0)!
-  typhoeus (~> 1.1, >= 1.1.2)
 
 BUNDLED WITH
    1.14.3

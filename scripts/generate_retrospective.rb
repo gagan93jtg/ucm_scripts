@@ -9,16 +9,14 @@ include Retrospectives
   end
 end
 
-members =  [{name: 'ankit', sheet_key: '16R3PBB-Z6diji3Yxsh_V4EskSZYkDdw7SFtoXXkYUrk',
-             bandwidth: 1, days_worked: 11},
-            {name: 'gagandeep.singh', sheet_key: '1bitkGbG_o5XbmTFD385Yn61d6oM6p8vJcondhh1pFjM',
-             bandwidth: 1, days_worked: 11},
-            {name: 'Neelakshi', sheet_key: '1iYqA1irBBpktV3ssvxeZRuzkzAZ9RFqYcqI26kJUrSI',
-             bandwidth: 1, days_worked: 11},
-            {name: 'DineshYadav', sheet_key: '1qwx--iJ14ZI9hUgumdixove9aeoQU-oZibKi80QLICQ',
-             bandwidth: 1, days_worked: 11},
-            {name: 'SwetaSharma', sheet_key: '1SyX2-62EQxSjvehcYMSknXM0HsPuoOv4_e-s2LBkbJU',
-             bandwidth: 0.75, days_worked: 11}]
+members =  [{name: 'Gagan', username: 'gagandeep.singh', bandwidth: 1, days_worked: 8,
+             sheet_key: '1bitkGbG_o5XbmTFD385Yn61d6oM6p8vJcondhh1pFjM'},
+            {name: 'Neelakshi', username: 'Neelakshi', bandwidth: 1, days_worked: 8,
+             sheet_key: '1iYqA1irBBpktV3ssvxeZRuzkzAZ9RFqYcqI26kJUrSI'},
+            {name: 'Dinesh', username: 'DineshYadav', bandwidth: 1, days_worked: 4.5,
+             sheet_key: '1qwx--iJ14ZI9hUgumdixove9aeoQU-oZibKi80QLICQ'},
+            {name: 'Sweta', username: 'SwetaSharma', bandwidth: 1, days_worked: 7,
+             sheet_key: '1SyX2-62EQxSjvehcYMSknXM0HsPuoOv4_e-s2LBkbJU'}]
 
 jira_options = {
   username: ARGV[0],
@@ -35,10 +33,10 @@ jira_options = {
 
 google_drive_config_file = '/home/cuegg/copperegg docs/config.json'
 ignore_tickets_starting_with = 'TR,TG,MISC,TI,INTERNAL'
-time_frame = '20170201 - 20170216'
+time_frame = '20170216 - 20170301'
 retrospective_sheet_key = '10gXrYfaQv31v2tUW2z0esm4PPkxy05OTvQrf7fLpluE'
 sprint_sheet_key = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
-sprint_sub_sheet_title = 'Feb I'
+sprint_sub_sheet_title = 'Feb II'
 sprint_id = '95'
 include_other_tickets = true
 

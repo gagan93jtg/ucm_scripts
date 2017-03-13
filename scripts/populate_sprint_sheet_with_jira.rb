@@ -6,6 +6,9 @@ HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Ticket owner', 'Reviewer', 'Poke
 
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
 SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
+UPTIME_CLOUD_MONITOR_BOARD_ID = 1
+TICKET_COUNT = 25
+
 
 def get_member_name(username)
   members_username_mapping = { 'gagandeep.singh' => 'Gagan',
@@ -15,7 +18,7 @@ def get_member_name(username)
     'ankit' => 'Ankit',
     'ogkosal' => 'Kosal',
     'shankar' => 'Shankar' }
-  #
+
   members_username_mapping[username] ||
   username.gsub('.', ' ').gsub('_', ' ').gsub('-', ' ').split.map(&:capitalize)*' '
 end
@@ -48,7 +51,6 @@ def get_sprint_sheet_tickets(subsheet)
         else
           old_data_row[key].merge!(header_key)
         end
-        #puts "header_key : #{header_key}, old_data_row[key] : #{old_data_row[key]}"
       end
     end
 
@@ -109,7 +111,12 @@ jira_options = { username: jira_username,
 google_client = retro.authenticate_google_drive(google_json_path)
 jira_client = retro.authenticate_jira(jira_options)
 
-issues = jira_client.Issue.jql("Sprint in (#{sprint_id}) ORDER BY Rank")
+if sprint_id == 'backlog'
+  simple_jira_client = retro.simple_jira_wrapper
+  issues = simple_jira_client.get_tickets_from_backlog(UPTIME_CLOUD_MONITOR_BOARD_ID, TICKET_COUNT)
+else
+  issues = jira_client.Issue.jql("Sprint in (#{sprint_id}) ORDER BY Rank")
+end
 all_subsheets = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets
 
 all_subsheets.each_with_index do |subsheet, index|
@@ -125,20 +132,26 @@ subsheet = all_subsheets[subsheet_index]
 
 sprint_sheet_existing_tickets = get_sprint_sheet_tickets(subsheet)
 
-#p sprint_sheet_existing_tickets.inspect
-
-#abort("done")
-
 subsheet.update_cells(1, 1, [HEADERS])
 
 issues.each do |issue|
-  key = issue.attrs['key']
-  summary = issue.attrs['fields']['summary']
-  type = issue.attrs['fields']['issuetype']['name']
-  status = 'Open'
-  ticket_owner = get_member_name(issue.attrs['fields']['assignee']['name'])
-  reviewer = ''
-  sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
+  if issue.respond_to?('attrs')
+    key = issue.attrs['key']
+    summary = issue.attrs['fields']['summary']
+    type = issue.attrs['fields']['issuetype']['name']
+    status = 'Open'
+    ticket_owner = get_member_name(issue.attrs['fields']['assignee']['name'])
+    reviewer = ''
+    sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
+  else
+    key = issue['key']
+    summary = issue['fields']['summary']
+    type = issue['fields']['issuetype']['name']
+    status = 'Open'
+    ticket_owner = get_member_name(issue['fields']['assignee']['name'])
+    reviewer = ''
+    sps = issue['fields'][STORY_POINT_CUSTOM_FIELD]
+  end
 
   row = [key, summary, type, status, ticket_owner, reviewer, sps]
   all_rows.push(row)
