@@ -34,7 +34,6 @@ members_username_mapping = { 'Gagan' => 'gagandeep.singh',
   'Neelakshi' => 'Neelakshi',
   'Sweta' => 'SwetaSharma',
   'Dinesh' => 'DineshYadav',
-  'Ankit' => 'ankit'
 }
 
 retro = RetroSetup.new

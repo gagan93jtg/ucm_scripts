@@ -44,5 +44,6 @@ retro.members.each do |member|
 end
 
 total_hours_spent_per_person.each do |k, v|
+  v ||= 0
   puts "Hours spent by #{k} on JIRA : #{v.round(2)}"
 end
