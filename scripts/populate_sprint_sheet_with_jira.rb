@@ -2,7 +2,7 @@ require 'retrospectives'
 require 'json'
 include Retrospectives
 
-HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Ticket owner', 'Reviewer', 'Poker/Assigned SPs', 'Estimation owner']
+HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Owner']
 
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
 SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
@@ -140,7 +140,7 @@ issues.each do |issue|
     summary = issue.attrs['fields']['summary']
     type = issue.attrs['fields']['issuetype']['name']
     status = 'Open'
-    ticket_owner = get_member_name(issue.attrs['fields']['assignee']['name'])
+    ticket_owner = ''
     reviewer = ''
     sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
   else
