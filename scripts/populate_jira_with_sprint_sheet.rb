@@ -45,6 +45,10 @@ jira_client = retro.authenticate_simple_jira(jira_options)
 
 ws = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets[0]
 
+puts "Hope you have added correct status (carry fwd) in front of carry fwd tickets to avoid SP change"
+puts "Press any key to continue"
+temp = $stdin.gets
+
 puts "worksheet : #{ws.title}"
 (1..23).each do |row_index|
   next unless ws[row_index, 1].include?('CE-')

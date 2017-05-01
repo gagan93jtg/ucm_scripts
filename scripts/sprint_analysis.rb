@@ -9,7 +9,7 @@ include Retrospectives
   end
 end
 
-# this is index of sprint sheet in sprint plans sheet (indexes are from 0)
+# this is index of sprint sheet in sprint plans sheet (index starts from are from 0)
 SPRINT_INDEX = ARGV[2].to_i
 
 jira_options = {
@@ -21,10 +21,10 @@ jira_options = {
 }
 
 
-members = [{name: 'gagandeep.singh', sheet_key: '1bitkGbG_o5XbmTFD385Yn61d6oM6p8vJcondhh1pFjM'},
- {name: 'Neelakshi', sheet_key: '1iYqA1irBBpktV3ssvxeZRuzkzAZ9RFqYcqI26kJUrSI'},
- {name: 'DineshYadav', sheet_key: '1qwx--iJ14ZI9hUgumdixove9aeoQU-oZibKi80QLICQ'},
- {name: 'SwetaSharma', sheet_key: '1SyX2-62EQxSjvehcYMSknXM0HsPuoOv4_e-s2LBkbJU'}]
+members = [{name: 'Gagan', username: 'gagandeep.singh', sheet_key: '1bitkGbG_o5XbmTFD385Yn61d6oM6p8vJcondhh1pFjM'},
+ {name: 'Neelakshi', username: 'Neelakshi', sheet_key: '1iYqA1irBBpktV3ssvxeZRuzkzAZ9RFqYcqI26kJUrSI'},
+ {name: 'Dinesh', username: 'DineshYadav', sheet_key: '1qwx--iJ14ZI9hUgumdixove9aeoQU-oZibKi80QLICQ'}]
+ #{name: 'SwetaSharma', sheet_key: '1SyX2-62EQxSjvehcYMSknXM0HsPuoOv4_e-s2LBkbJU'}]
 
 #
 total_hours_spent_per_person = Hash.new(0)
