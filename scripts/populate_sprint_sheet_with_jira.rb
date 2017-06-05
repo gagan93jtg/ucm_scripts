@@ -136,6 +136,10 @@ subsheet.update_cells(1, 1, [HEADERS])
 
 issues.each do |issue|
   if issue.respond_to?('attrs')
+    issue_state =  issue.attrs['fields']['status']['name']
+    puts "Issue state : #{issue_state} for #{issue.attrs['key']}"
+    next if issue_state == 'Closed' || issue_state == 'Accepted' || issue_state == 'Defer' ||
+            issue_state == 'Resolved'
     key = issue.attrs['key']
     summary = issue.attrs['fields']['summary']
     type = issue.attrs['fields']['issuetype']['name']
@@ -144,10 +148,13 @@ issues.each do |issue|
     reviewer = ''
     sps = issue.attrs['fields'][STORY_POINT_CUSTOM_FIELD]
   else
+    issue_state =  issue['fields']['status']['name']
+    next if issue_state == 'Closed' || issue_state == 'Accepted' || issue_state == 'Defer' ||
+            issue_state == 'Resolved'
     key = issue['key']
     summary = issue['fields']['summary']
     type = issue['fields']['issuetype']['name']
-    status = 'Open'
+   status = 'Open'
     ticket_owner = get_member_name(issue['fields']['assignee']['name'])
     reviewer = ''
     sps = issue['fields'][STORY_POINT_CUSTOM_FIELD]

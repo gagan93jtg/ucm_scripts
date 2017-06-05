@@ -50,7 +50,7 @@ puts "Press any key to continue"
 temp = $stdin.gets
 
 puts "worksheet : #{ws.title}"
-(1..23).each do |row_index|
+(1..40).each do |row_index|
   next unless ws[row_index, 1].include?('CE-')
   ticket = ws[row_index, 1]
   sp = ws[row_index, 7]
@@ -60,7 +60,7 @@ puts "worksheet : #{ws.title}"
   next("incomplete data in row #{row_index}") if(ticket.nil? || ticket.empty? || sp.to_s.nil? ||
                                                  sp.empty? || assignee.nil? || assignee.empty?)
   resp1 = jira_client.update_assignee(assignee, ticket)
-  unless status.include?('carry')
+  if !(status.include?('carry') || status.include?('pcr'))
     resp2 = jira_client.update_custom_field({ STORY_POINT_CUSTOM_FIELD => sp.to_i}, ticket)
   end
   resp3 = jira_client.update_custom_field({'timetracking'=>{'originalEstimate'=>"#{sp.to_i * 4}h"}}, ticket)
