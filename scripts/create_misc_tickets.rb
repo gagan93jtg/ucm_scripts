@@ -9,7 +9,7 @@ end
 
 username = ARGV[0]
 password = ARGV[1]
-sprint_number = ARGV[2]
+sprint_number = ARGV[2].to_i
 
 PROJET_ID = 10000
 ISSUE_TYPE = {"self"=> "https://copperegg.atlassian.net/rest/api/2/issuetype/3",
@@ -35,6 +35,7 @@ jira_client = retro.authenticate_jira(jira_options)
 
 summaries = ['MISC Ticket', 'Standup Hours', 'Staging Deploy', 'Production Deploy']
 
+sprint_number -= 37 # sprint id and number are different
 summaries.each do |summary|
   t_summary = summary + " - Sprint #{sprint_number}"
   issue_hash = {

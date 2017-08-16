@@ -2,12 +2,12 @@ require 'retrospectives'
 require 'json'
 include Retrospectives
 
-HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Owner']
+HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Owner', 'Reviewer', 'Assigned SPs']
 
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
 SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
 UPTIME_CLOUD_MONITOR_BOARD_ID = 1
-TICKET_COUNT = 25
+TICKET_COUNT = 20
 
 
 def get_member_name(username)
