@@ -1,11 +1,10 @@
-require 'retrospectives'
+#!/usr/bin/env ruby
 
-require 'json'
+require 'retrospectives'
 
 include Retrospectives
 
 HISTORIC_SHEET_KEY = '14zWEIt4ATkgzWXBeZyWpw_FsABu06h37hbTWr6FgCsE'
-
 retro = RetroSetup.new
 task_type = Hash.new(0)
 task_category = Hash.new(0)

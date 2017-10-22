@@ -1,5 +1,8 @@
+#!/usr/bin/env ruby
+
 require 'retrospectives'
-require 'json'
+require_relative '../utils/load_jira_auth.rb'
+
 include Retrospectives
 
 HEADERS = ['Key', 'Summary', 'Type', 'Status', 'Owner', 'Reviewer', 'Assigned SPs']
@@ -8,7 +11,6 @@ STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
 SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
 UPTIME_CLOUD_MONITOR_BOARD_ID = 1
 TICKET_COUNT = 20
-
 
 def get_member_name(username)
   members_username_mapping = { 'gagandeep.singh' => 'Gagan',
@@ -60,7 +62,6 @@ def get_sprint_sheet_tickets(subsheet)
   old_data
 end
 
-
 def merge_jira_data_with_existing_data(jira_data_array, sprint_sheet_data_array)
   return if sprint_sheet_data_array.nil? || sprint_sheet_data_array.empty?
 
@@ -84,31 +85,29 @@ def merge_jira_data_with_existing_data(jira_data_array, sprint_sheet_data_array)
 end
 
 
-if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty? || ARGV[3].to_s.empty? ||
- ARGV[4].to_s.empty? || ARGV[5].to_s.empty?)
-puts("Usage: ruby #{__FILE__} jira_username jira_password google_config_json_file_path sprint_id sprint_name. Example:")
-abort("\nruby #{__FILE__} email@domain.com password ~/config.json 96 Feb II")
+if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty?)
+  puts("Usage: ruby #{__FILE__} sprint_id sprint_name. Example:")
+  abort("\nruby #{__FILE__} 96 Feb II")
 end
 
-jira_username = ARGV[0]
-jira_password = ARGV[1]
-google_json_path = ARGV[2]
-sprint_id = ARGV[3]
-sprint_name = ARGV[4] + ' ' + ARGV[5]
+sprint_id = ARGV[0]
+sprint_name = ARGV[1] + ' ' + ARGV[2]
 
 all_rows = Array.new
 subsheet_index = nil
 sprint_sheet_tickets = Array.new
 retro = RetroSetup.new
 
-jira_options = { username: jira_username,
-  password: jira_password,
-  site: 'https://copperegg.atlassian.net',
+jira_options = {
+  username: JiraAuth::USERNAME,
+  password: JiraAuth::PASSWORD,
+  site: JiraAuth::SITE
   context_path: '',
-  auth_type: :basic }
+  auth_type: :basic
+}
 
 #
-google_client = retro.authenticate_google_drive(google_json_path)
+google_client = retro.authenticate_google_drive(ENV['HOME'] + '/google_auth.json')
 jira_client = retro.authenticate_jira(jira_options)
 
 if sprint_id == 'backlog'

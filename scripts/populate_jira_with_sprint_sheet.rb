@@ -1,5 +1,8 @@
+#!/usr/bin/env ruby
+
 require 'retrospectives'
-require 'json'
+require_relative '../utils/load_jira_auth.rb'
+
 include Retrospectives
 
 def success?(typhoeus_response)
@@ -14,22 +17,13 @@ def success?(typhoeus_response)
   end
 end
 
-if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty?)
-  puts("Usage: ruby #{__FILE__} jira_username jira_password google_config_json_file_path. Example:")
-  abort("\nruby #{__FILE__} email@domain.com password ~/config.json")
-end
-
-username = ARGV[0]
-password = ARGV[1]
-google_json_path = ARGV[2]
-
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
 SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
 
 jira_options = {
-  username: username,
-  password: password,
-  site: 'https://copperegg.atlassian.net'
+  username: JiraAuth::USERNAME,
+  password: JiraAuth::PASSWORD,
+  site: JiraAuth::SITE
 }
 
 members_username_mapping = { 'Gagan' => 'gagandeep.singh',
@@ -40,13 +34,13 @@ members_username_mapping = { 'Gagan' => 'gagandeep.singh',
 
 retro = RetroSetup.new
 
-google_client = retro.authenticate_google_drive(google_json_path)
+google_client = retro.authenticate_google_drive(ENV['HOME'] + '/google_auth.json')
 jira_client = retro.authenticate_simple_jira(jira_options)
 
 ws = google_client.spreadsheet_by_key(SPRINT_SHEET_KEY).worksheets[0]
 
-puts "Hope you have added correct status (carry fwd/pcr) in front of carry fwd tickets to avoid SP change"
-puts "Press any key to continue"
+puts 'Hope you have added correct status (carry fwd/pcr) in front of carry fwd tickets to avoid SP change'
+puts 'Press any key to continue'
 temp = $stdin.gets
 
 puts "worksheet : #{ws.title}"

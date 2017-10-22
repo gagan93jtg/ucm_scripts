@@ -1,17 +1,17 @@
+#!/usr/bin/env ruby
+
 require 'retrospectives'
-require 'json'
-require 'date'
+require_relative '../utils/load_jira_auth.rb'
+
 include Retrospectives
 
-if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty? || ARGV[2].to_s.empty? || ARGV[3].to_s.empty?)
-  puts("Usage: ruby #{__FILE__} raw_data_file_path days_old jira_username jira_password. Example :")
-  abort("\nruby #{__FILE__} /home/ubuntu/timesheet_data 2 email@domain.com password")
+if(ARGV[0].to_s.empty? || ARGV[1].to_s.empty?)
+  puts("Usage: ruby #{__FILE__} raw_data_file_path days_old. Example :")
+  abort("\nruby #{__FILE__} /home/ubuntu/timesheet_data 2")
 end
 
 raw_data = File.read(ARGV[0])
 days = ARGV[1].to_i
-username = ARGV[2]
-password = ARGV[3]
 
 date = Date.parse(Time.at(((Time.now.to_i / 86400) * 86400) - (86400 * days)).to_s).to_s
 parameters = { 'timeSpentSeconds' => nil,
@@ -24,9 +24,9 @@ puts "Logging hours for #{date} ..."
 sleep 2
 
 jira_options = {
-  username: username,
-  password: password,
-  site: 'https://copperegg.atlassian.net'
+  username: JiraAuth::USERNAME,
+  password: JiraAuth::PASSWORD,
+  site: JiraAuth::SITE
 }
 
 jira_client = RetroSetup.new.authenticate_simple_jira(jira_options)
