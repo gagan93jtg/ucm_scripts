@@ -1,0 +1,5 @@
+{
+	"jira_username": "jira_username_or_email_id",
+	"jira_encrypted_password": "base_64_password",
+	"jira_site": "https://<Jira_subdomain>.atlassian.net/"
+}

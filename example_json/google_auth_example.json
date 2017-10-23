@@ -1,0 +1,9 @@
+{
+  "client_id": "232342325432-4354k2l4j5l43m21kj4nkkj.apps.googleusercontent.com",
+  "client_secret": "wkj5h3j4kewnwj342kenm",
+  "scope": [
+    "https://www.googleapis.com/auth/drive",
+    "https://spreadsheets.google.com/feeds/"
+  ],
+  "refresh_token": "1/bKNVC8mFM234jklj234kjh23k4j2h3kjenkj324nhkVb2rXRpQf560UZilhufD7"
+}

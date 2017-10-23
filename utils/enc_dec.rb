@@ -1,7 +1,5 @@
 require 'base64'
 
-@secret_key = 'somelongkeyfornoreason'
-
 (0..1).each do |index|
   if(ARGV[index].to_s.empty?)
     puts("\n   Usage: ruby #{__FILE__} option (encrypt/decrypt) string . Example :")
