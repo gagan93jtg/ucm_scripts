@@ -31,16 +31,16 @@ jira_options = {
 
 google_drive_config_file = ENV['HOME'] + '/google_auth.json'
 ignore_tickets_starting_with = 'TR,TG,INTERNAL,RETRO,PROJECT,Story ID,CR'
-time_frame = '20171003 - 20171015'
+time_frame = '20171016 - 20171102'
 retrospective_sheet_key = '10gXrYfaQv31v2tUW2z0esm4PPkxy05OTvQrf7fLpluE'
 sprint_sheet_key = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
-sprint_sub_sheet_title = 'Oct I'
-sprint_id = '114'
+sprint_sub_sheet_title = 'Oct II'
+sprint_id = '115'
 include_other_tickets = true
 get_total_sps = true
 get_jira_hours = false
 start_row_for_tickets = 24
-project_misc_ticket_ids = ['PROJECT', 'P', 'CE-3063', 'CE-3064', 'CE-3065', 'CE-3066']
+project_misc_ticket_ids = ['PROJECT', 'P', 'CE-3098', 'CE-3099', 'CE-3100', 'CE-3101']
 company_internal_ticket_ids = ['CR', 'INTERNAL', 'I']
 
 

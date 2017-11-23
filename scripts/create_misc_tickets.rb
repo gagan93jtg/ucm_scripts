@@ -10,9 +10,7 @@ if(ARGV[0].to_s.empty?)
   abort("\nruby #{__FILE__} 72")
 end
 
-username = ARGV[0]
-password = ARGV[1]
-sprint_number = ARGV[2].to_i
+sprint_number = ARGV[0].to_i
 
 PROJECT_ID = 10000
 ISSUE_TYPE = {
@@ -42,6 +40,8 @@ jira_client = retro.authenticate_jira(jira_options)
 summaries = ['MISC Ticket', 'Standup hours', 'Staging Deployment', 'Production Deployment']
 
 sprint_number -= 37 # sprint id and number are different
+
+
 summaries.each do |summary|
   t_summary = summary + " - Sprint #{sprint_number}"
   issue_hash = {
@@ -49,7 +49,8 @@ summaries.each do |summary|
     {
       'summary' => t_summary,
       'project' => {'id' => PROJECT_ID},
-      'issuetype' => ISSUE_TYPE
+      'issuetype' => ISSUE_TYPE,
+      'customfield_10007' => sprint_number + 37
      }
   }
   issue = jira_client.Issue.build

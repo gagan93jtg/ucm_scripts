@@ -101,7 +101,7 @@ retro = RetroSetup.new
 jira_options = {
   username: JiraAuth::USERNAME,
   password: JiraAuth::PASSWORD,
-  site: JiraAuth::SITE
+  site: JiraAuth::SITE,
   context_path: '',
   auth_type: :basic
 }
