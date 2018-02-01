@@ -18,7 +18,7 @@ def success?(typhoeus_response)
 end
 
 STORY_POINT_CUSTOM_FIELD = 'customfield_10004'
-SPRINT_SHEET_KEY = '1UCBgSJkOJvMBZfAqAtlyQWakxkCqZ7kLO1nTCFX-GYA'
+SPRINT_SHEET_KEY = '1ARZ8RqHeNtj7lEdawCm1PX6HPXICMo3BnZ88bPXrUXA'
 
 jira_options = {
   username: JiraAuth::USERNAME,
